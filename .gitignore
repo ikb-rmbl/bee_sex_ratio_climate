@@ -1,3 +1,6 @@
+# Scratch directory
+/scratch/
+
 # History files
 .Rhistory
 .Rapp.history
