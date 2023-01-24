@@ -87,8 +87,8 @@ extracted_temps <- list()
 
 for (i in 1:length(unique_years)){
   print(paste("Extracting data for year",unique_years[i]))
-  start_date <- min(bee_dates[which(bee_years==bee_years[i])])
-  end_date <- max(bee_dates[which(bee_years==bee_years[i])])
+  start_date <- min(bee_dates[which(bee_years==unique_years[i])])
+  end_date <- max(bee_dates[which(bee_years==unique_years[i])])
   
   ##Builds a remote raster dataset
   tmax_year_rast <- sdp_get_raster(tmax_catID,date_start=start_date,date_end=end_date)
@@ -120,3 +120,18 @@ for (i in 1:length(unique_years)){
 }
 extracted_temp_df <- bind_rows(extracted_temps)
 write.csv(extracted_temp_df,file="./output/bee_sites_temp_2006_2022.csv")
+
+##Plots temp data for sanity check.
+extracted_temp_df$Date <- as.Date(extracted_temp_df$Date)
+extracted_temp_df$DOY <- as.numeric(format(extracted_temp_df$Date,format="%j"))
+extracted_temp_df$Year <- format(extracted_temp_df$Date,format="%Y")
+
+ggplot(extracted_temp_df)+
+  geom_line(aes(x=DOY,y=Tmax,color=Year),alpha=0.5)+
+  geom_line(aes(x=DOY,y=Tmin,color=Year),alpha=0.5)+
+  geom_abline(aes(intercept=0,slope=0),linetype="dotted")+
+  #scale_x_date(limits=as.Date(c("2007-01-01","2007-12-31")))+
+  facet_wrap(facets=~Site)+
+  theme_bw()
+  
+
