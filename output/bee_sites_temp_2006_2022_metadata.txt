@@ -1,0 +1,9 @@
+"## Extracted air temperature data from the RMBL Spatial Data Platform at Becky Irwin's long-term bee montioring sites, 2006-2022."			
+## This dataset represents estimated daily minimum and maximum air temperatures at 2m above the surface. This data was derived from interpolated maps of air temperature created by Ian Breckheimer at Rocky Mountain Biologial Laboratory.			
+			
+Column	Type	Units	Explanation
+ID	categorical	none	Unique ID for each site.
+Site	categorical	none	Name of each site
+Date	date	calendar date	Date of tmin or tmax estimate.
+Tmax	numeric	degrees Celsius 	"Estimated daily maximum air temperature, computed from midnight to midnight local time."
+Tmin	numeric	degrees Celsius 	"Estimated daily minimum air temperature, computed from midnight to midnight local time."

@@ -1,0 +1,11 @@
+## Extracted Snow Data from the RMBL Spatial Data Platform at Becky Irwin's long-term bee monitoring sites.			
+## This dataset includes estimates of the timing of snowpack onset and snowpack dissapearance from 2006 to 2022. These data were synthesized from microclimate sensor and satellite imagery by Ian Breckheimer at Rocky Mountain Biological Laboratory.			
+			
+Column	Type	Units	Explanation
+ID	Categorical	none	Numeric ID for each site.
+Site	Categorical	none	Name of each site.
+Year	Integer	Years	Calendar year of snow data.
+SnowPersistDOY	Numeric	Day of Year	"Estimated first day of bare ground (without snow), measured as days since January 1st)."
+SnowOnsetDOY	Numeric	Day of Year	"Estimated last day of bare ground in the previous fall, measured as (negative) days since January 1st) of the current year."
+SnowLengthDays	Numeric	Days	"Duration of snow cover in the winter that ends in the calendar year (i.e. ""Water Year)."
+SnowOnsetDOY_calendar	Numeric	Days	Estimated last day of bare ground in the calendar year.
