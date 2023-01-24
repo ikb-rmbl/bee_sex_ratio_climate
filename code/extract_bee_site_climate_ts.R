@@ -71,7 +71,7 @@ SnowOnsetDOY_df <- data.frame(Site=sites_snow_wide$Site,
 sites_snow_wide <- left_join(sites_snow_wide,SnowOnsetDOY_df,by=c("Site","Year"))
 
 ## Writes snow data to disk.
-write.csv(sites_snow_wide,"./output/bee_sites_snow_2006_2022.csv")
+write.csv(sites_snow_wide,"./output/bee_sites_snow_2006_2022.csv",row.names=FALSE)
 
 ## Joins to site metadata.
 sites_snow_wide_meta <- left_join(sites_snow_wide,sites,by=c("Site"="site"))
@@ -125,7 +125,7 @@ for (i in 1:length(unique_years)){
   extracted_temps[[i]] <- temp_sites_year_wide
 }
 extracted_temp_df <- bind_rows(extracted_temps)
-write.csv(extracted_temp_df,file="./output/bee_sites_temp_2006_2022.csv")
+write.csv(extracted_temp_df,file="./output/bee_sites_temp_2006_2022.csv",row.names=FALSE)
 
 
 ##Computes weekly quantiles.
@@ -177,6 +177,7 @@ for(i in 1:length(unique_years)){
   p1 <- ggplot(filter(extracted_temp_df,Year == unique_years[i]))+
     labs(title=paste("Air Temperature",unique_years[i]),y="Air Temp. (C)")+
     geom_abline(aes(intercept=0,slope=0),linetype="dotted")+
+    geom_segment(aes(x=))
     geom_ribbon(aes(x=DOY,ymin=Tmax_quant_min,ymax=Tmax_quant_max),fill="darkred",alpha=0.1)+
     geom_ribbon(aes(x=DOY,ymin=Tmax_quant_10,ymax=Tmax_quant_90),fill="darkred",alpha=0.25)+
     #geom_ribbon(aes(x=DOY,ymin=Tmax_quant_25,ymax=Tmax_quant_75),fill="darkred",alpha=0.5)+
