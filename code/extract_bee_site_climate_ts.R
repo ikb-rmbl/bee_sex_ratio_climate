@@ -144,7 +144,7 @@ ggplot(extracted_temp_df)+
 ## Computes weekly quantiles.
 extracted_temp_df$Week <- format(extracted_temp_df$Date,format="%W")
 
-weekly_sum <- extracted_temp_df %>% group_by(Site,Week) %>% 
+weekly_sum <- extracted_temp_df %>% group_by(ID,Site,Week) %>% 
   summarise(Tmin_quant_min=min(Tmin),
             Tmin_quant_025=quantile(Tmin,probs=c(0.025)),
             Tmin_quant_10=quantile(Tmin,probs=c(0.1)),
@@ -164,10 +164,16 @@ weekly_sum <- extracted_temp_df %>% group_by(Site,Week) %>%
             Tmax_quant_975=quantile(Tmax,probs=c(0.975)),
             Tmax_quant_max=max(Tmax))
 
-extracted_temp_df <- left_join(extracted_temp_df,weekly_sum,by=c("Site","Week"))
+extracted_temp_df <- left_join(extracted_temp_df,weekly_sum,by=c("ID","Site","Week"))
 
 ##Joins temp and snow data.
-extracted_temp_df <- left_join(extracted_temp_df,sites_snow_wide,by=c("Site","Year"))
+extracted_temp_df <- left_join(extracted_temp_df,sites_snow_wide,by=c("ID","Site","Year"))
+
+##Creates a snow indicator.
+before_snowmelt <- extracted_temp_df$DOY < extracted_temp_df$SnowPersistDOY
+after_snowonset <- extracted_temp_df$DOY > extracted_temp_df$SnowOnsetDOY_calendar
+snow_ind <- as.numeric(before_snowmelt | after_snowonset)
+extracted_temp_df$Snowpack <- snow_ind
 
 ##Creates plots for every year.
 for(i in 1:length(unique_years)){
@@ -177,7 +183,7 @@ for(i in 1:length(unique_years)){
   p1 <- ggplot(filter(extracted_temp_df,Year == unique_years[i]))+
     labs(title=paste("Air Temperature",unique_years[i]),y="Air Temp. (C)")+
     geom_abline(aes(intercept=0,slope=0),linetype="dotted")+
-    geom_segment(aes(x=))
+    geom_line(aes(x=DOY,y=0,alpha=Snowpack),lwd=30,color="grey80")+
     geom_ribbon(aes(x=DOY,ymin=Tmax_quant_min,ymax=Tmax_quant_max),fill="darkred",alpha=0.1)+
     geom_ribbon(aes(x=DOY,ymin=Tmax_quant_10,ymax=Tmax_quant_90),fill="darkred",alpha=0.25)+
     #geom_ribbon(aes(x=DOY,ymin=Tmax_quant_25,ymax=Tmax_quant_75),fill="darkred",alpha=0.5)+
@@ -192,7 +198,7 @@ for(i in 1:length(unique_years)){
     theme_bw()+
     theme(legend.position="none")
   
-  plot_filename <- paste0("./figs/air_temp_daily_allsites_year_",unique_years[i],".pdf")
+  plot_filename <- paste0("./figs/air_temp_snow_daily_allsites_year_",unique_years[i],".pdf")
   pdf(plot_filename,width=12,height=10)
   print(p1)
   dev.off()
